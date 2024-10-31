@@ -23,6 +23,6 @@ class GptApiUtilTest {
     }
 
     @Test
-    void sendMessage() {
+    void sendMessageAndResAll() {
     }
 }

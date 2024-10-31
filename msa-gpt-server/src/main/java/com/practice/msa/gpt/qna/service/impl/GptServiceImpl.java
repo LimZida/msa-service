@@ -34,7 +34,7 @@ public class GptServiceImpl implements GptService {
         final GptReqDTO gptReqDTO = new GptReqDTO(model, messageList);
 
         // GPT API 요청 및 DTO 변환
-        final GptResDTO gptResDTO = gptApiUtil.sendMessage(gptReqDTO);
+        final GptResDTO gptResDTO = gptApiUtil.sendMessageAndResAll(gptReqDTO);
         List<String> answerList = gptResDTO.getChoices().stream()
                 .map(choice -> choice.getMessage().getContent())
                 .collect(Collectors.toList());
