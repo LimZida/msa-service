@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  *
  * reference : https://055055.tistory.com/118 , https://jie0025.tistory.com/545 , https://www.devkuma.com/docs/mock-web-server/
- * 
+ *
  * author : 임현영
  *
  * date : 2024.11.04
@@ -72,7 +72,7 @@ class GptApiUtilTest {
         * */
         List<String> messages = new ArrayList<>();
         messages.add("피자에 대해 짧게 설명해주세요.");
-        request = new GptReqDTO("gpt-3.5-turbo",messages);
+        request = new GptReqDTO(gptConfig.getModel(),messages);
 
         /*
         * Response Setting
@@ -127,41 +127,40 @@ class GptApiUtilTest {
     void testSendMessageAndResAll_Success() throws JsonProcessingException, InterruptedException {
 
         /*
-        * 200 응답 설정
+        * 200 응답 설정 - given
         * */
         String jsonResponse = new ObjectMapper().writeValueAsString(response);
         mockWebServer.enqueue(new MockResponse().setBody(jsonResponse).setResponseCode(200));
 
         /*
-        * GPT API 요청
+        * GPT API 요청 - when
         * */
         GptResDTO actualResponse = gptApiUtil.sendMessageAndResAll(request);
         log.info("actual: {}",actualResponse.getChoices().get(0).getMessage().getContent());
         log.info("mock: {}",response.getChoices().get(0).getMessage().getContent());
 
-        // 요청 URL 검증
+        // URL 확인
         RecordedRequest recordedRequest = mockWebServer.takeRequest();
         log.info("mock url: {}",recordedRequest.getPath());
 
-        // 응답값 검증
+        // 응답값 검증 - then
         assertThat(actualResponse.getChoices().get(0).getMessage().getContent())
                 .isEqualTo(response.getChoices().get(0).getMessage().getContent());
-
-//        assertThat(recordedRequest.getPath()).isEqualTo("/test/mock/gpt");
     }
 
     @Test
     void testSendMessageAndResAll_WebClientException() {
         /*
-        * 에러 응답 설정
+        * 에러 응답 설정 - given
         * */
         // client error
         mockWebServer.enqueue(new MockResponse().setResponseCode(401));
         // server error
 //        mockWebServer.enqueue(new MockResponse().setResponseCode(500));
 
+
         /*
-        * 에러 예상
+        * 에러 예상 - when then
         * */
         assertThrows(CustomRequestException.class, () -> {
             gptApiUtil.sendMessageAndResAll(request);
