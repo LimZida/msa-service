@@ -101,7 +101,7 @@ class GptApiUtilTest {
         // 하지만 이렇게 되면 실제 ChatGpt server와 통신하므로, 가짜 서버 객체를 만들려면 재정의 해야한다.
 
         // MockWebServer URL 설정
-        String baseUrl = mockWebServer.url("/test/mock/gpt").toString();
+        final String baseUrl = mockWebServer.url("/test/mock/gpt").toString();
 
         // testWebClient 설정 (WebClinetConfig.java와 동일하나 baseUrl을 mockWebServer 설정으로 변경)
         final HttpClient httpClient = HttpClient.create()
@@ -129,18 +129,18 @@ class GptApiUtilTest {
         /*
         * 200 응답 설정 - given
         * */
-        String jsonResponse = new ObjectMapper().writeValueAsString(response);
+        final String jsonResponse = new ObjectMapper().writeValueAsString(response);
         mockWebServer.enqueue(new MockResponse().setBody(jsonResponse).setResponseCode(200));
 
         /*
         * GPT API 요청 - when
         * */
-        GptResDTO actualResponse = gptApiUtil.sendMessageAndResAll(request);
+        final GptResDTO actualResponse = gptApiUtil.sendMessageAndResAll(request);
         log.info("actual: {}",actualResponse.getChoices().get(0).getMessage().getContent());
         log.info("mock: {}",response.getChoices().get(0).getMessage().getContent());
 
         // URL 확인
-        RecordedRequest recordedRequest = mockWebServer.takeRequest();
+        final RecordedRequest recordedRequest = mockWebServer.takeRequest();
         log.info("mock url: {}",recordedRequest.getPath());
 
         // 응답값 검증 - then
