@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
@@ -73,7 +74,7 @@ public class GptApiUtil {
                                 .doBeforeRetry(retrySignal -> {
                                     // 현재 재시도 횟수를 로깅
                                     long attempt = retrySignal.totalRetries() + 1; // 0부터 시작하므로 +1
-                                    log.warn("Retrying... Attempt number: {}", attempt);
+                                    log.warn("Retrying... Attempt count: {}", attempt);
                                 })
                 .filter(throwable ->
                         // 요청 및 응답 통신 에러일 경우에만 재시도
@@ -161,13 +162,15 @@ public class GptApiUtil {
                                 .doBeforeRetry(retrySignal -> {
                                     // 현재 재시도 횟수를 로깅
                                     long attempt = retrySignal.totalRetries() + 1; // 0부터 시작하므로 +1
-                                    log.warn("Retrying... Attempt number: {}", attempt);
+                                    log.warn("Retrying... Attempt count: {}", attempt);
                                 })
                                 .filter(throwable ->
                                         // 요청 및 응답 통신 에러일 경우에만 재시도
-                                        throwable instanceof WebClientRequestException ||
-                                        throwable instanceof WebClientResponseException))
+                                        throwable instanceof WebClientException
+                                )
+                )
                 // 예외처리
+                // Mono.error로 응답해야 Retry 가능
                 .onErrorResume(Exception.class, e -> {
                     // WebClientRequestException 내 세부 예외 확인
                     if (e instanceof WebClientRequestException) {
@@ -198,7 +201,6 @@ public class GptApiUtil {
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
-
         GptResDTO gptResDTO = ConvertMapper.convertStringToDTO(json,GptResDTO.class);
         log.info("############ CONVERTED RES RETURN ############");
         LogUtil.responseLogging(gptResDTO);
