@@ -11,9 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,9 +59,18 @@ class GptApiUtilTest {
     @Autowired
     private GptConfig gptConfig;
 
-    private MockWebServer mockWebServer;
+    private static MockWebServer mockWebServer;
     private GptResDTO response = new GptResDTO();
     private GptReqDTO request = new GptReqDTO();
+
+    @BeforeAll
+    static void startServer() throws IOException {
+        /*
+        * mock server start
+        * */
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+    }
 
     @BeforeEach
     void initialize() throws IOException {
@@ -93,8 +100,6 @@ class GptApiUtilTest {
         /*
         * mock server setting
         * */
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
 
         // 현재 WebClientConfig 에 url, api key 등등 전부 선언되어있기 때문에 굳이 재설정 해줄 필요가 없다.
         // gptApiUtil 자체도 Custom WebClient랑 연동이 되어있기 때문에 기본생성자로 다시 만들 이유가 없다.
@@ -118,8 +123,8 @@ class GptApiUtilTest {
         gptApiUtil = new GptApiUtil(testWebClient);
     }
 
-    @AfterEach
-    void destroy() throws IOException {
+    @AfterAll
+    static void destroy() throws IOException {
         mockWebServer.shutdown();
     }
 
