@@ -28,8 +28,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 /**
  * title : GptApiUtilTest
@@ -45,8 +46,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *                          5. mockWebServer 종료
  *
  *
- * reference : https://055055.tistory.com/118 , https://jie0025.tistory.com/545
- *
+ * reference : https://055055.tistory.com/118 , https://jie0025.tistory.com/545 , https://www.devkuma.com/docs/mock-web-server/
+ * 
  * author : 임현영
  *
  * date : 2024.11.04
@@ -65,7 +66,7 @@ class GptApiUtilTest {
     private GptReqDTO request = new GptReqDTO();
 
     @BeforeEach
-    void setUp() throws IOException {
+    void initialize() throws IOException {
         /*
         * Request Setting
         * */
@@ -118,7 +119,7 @@ class GptApiUtilTest {
     }
 
     @AfterEach
-    void tearDown() throws IOException {
+    void destroy() throws IOException {
         mockWebServer.shutdown();
     }
 
