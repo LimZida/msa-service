@@ -78,8 +78,8 @@ public class GptApiUtil {
                                 })
                 .filter(throwable ->
                         // 요청 및 응답 통신 에러일 경우에만 재시도
-                        throwable instanceof WebClientRequestException ||
-                        throwable instanceof WebClientResponseException))
+                        // 그 외 예기치 못한 에러일 경우에는 서비스에 영향이 갈 수 있으니 제외
+                        throwable instanceof WebClientException))
                 // 예외처리
                 .onErrorResume(Exception.class, e -> {
                     // WebClientRequestException 내 세부 예외 확인
@@ -126,7 +126,7 @@ public class GptApiUtil {
     * header + body 응답 받을 경우
     * */
     public GptResDTO sendMessageAndResAll(GptReqDTO gptReqDTO) {
-        log.info("############ GPT API REQUEST ############");
+        log.info("############ ResAll GPT API REQUEST ############");
         LogUtil.requestLogging(gptReqDTO);
 
         String json = webClient.post()
@@ -145,13 +145,14 @@ public class GptApiUtil {
                     }
                     // 상태 코드가 200이 아닐 경우 예외 처리
                     else {
+                        log.error("############ ERROR ############");
                         // WebClientResponseException 타입으로 예외를 만들어 반환하는 Mono를 생성
                         // 반드시 flatMap 혹은 throw exception 을 해줘야만이 onErrorResume 에서 catch 하여 오류 핸들링이 가능하다.
                         return response.createException().flatMap(Mono::error);
                     }
                 })
                 // 재시도 전 오류 로깅
-                .doOnError(e -> log.error("Error occurred before retry: {}", e.toString()))
+                .doOnError(e -> log.error("ResAll Error occurred before retry: {}", e.toString()))
                 /*
                  * retry 방법 2
                  * */
@@ -162,10 +163,11 @@ public class GptApiUtil {
                                 .doBeforeRetry(retrySignal -> {
                                     // 현재 재시도 횟수를 로깅
                                     long attempt = retrySignal.totalRetries() + 1; // 0부터 시작하므로 +1
-                                    log.warn("Retrying... Attempt count: {}", attempt);
+                                    log.warn("ResAll Retrying... Attempt count: {}", attempt);
                                 })
                                 .filter(throwable ->
                                         // 요청 및 응답 통신 에러일 경우에만 재시도
+                                        // 그 외 예기치 못한 에러일 경우에는 서비스에 영향이 갈 수 있으니 제외
                                         throwable instanceof WebClientException
                                 )
                 )
@@ -176,33 +178,33 @@ public class GptApiUtil {
                     if (e instanceof WebClientRequestException) {
                         // 요청 연결 예외
                         if (e.getCause() instanceof ConnectTimeoutException) {
-                            log.error("API Connect Timeout Error ::::: {}", e.toString());
+                            log.error("ResAll API Connect Timeout Error ::::: {}", e.toString());
                             return Mono.error(new CustomRequestException(GPT02.name(), GPT02.getMessage(), e));
                         }
                         // 응답 시간 예외
                         else if (e.getCause() instanceof ReadTimeoutException) {
-                            log.error("API Read Timeout Error ::::: {}", e.toString());
+                            log.error("ResAll API Read Timeout Error ::::: {}", e.toString());
                             return Mono.error(new CustomRequestException(GPT03.name(), GPT03.getMessage(), e));
                         } else {
-                            log.error("API Request Unexpected Error ::::: {}", e.toString());
+                            log.error("ResAll API Request Unexpected Error ::::: {}", e.toString());
                             return Mono.error(new CustomRequestException(GPT98.name(), GPT98.getMessage(), e));
                         }
                     }
                     // 응답 예외
                     else if (e instanceof WebClientResponseException) {
-                        log.error("API Response Error ::::: {}", e.toString());
-                        log.error("Body: {}", ((WebClientResponseException) e).getResponseBodyAsString());
+                        log.error("ResAll API Response Error ::::: {}", e.toString());
+                        log.error("ResAll to Body: {}", ((WebClientResponseException) e).getResponseBodyAsString());
                         return Mono.error(new CustomRequestException(GPT01.name(), GPT01.getMessage(), e));
                     } else {
                         // 그 외 예외
-                        log.error("API Unexpected Error ::::: {}", e.getMessage());
+                        log.error("ResAll API Unexpected Error ::::: {}", e.getMessage());
                         return Mono.error(new CustomRequestException(GPT99.name(), GPT99.getMessage(), e));
                     }
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
         GptResDTO gptResDTO = ConvertMapper.convertStringToDTO(json,GptResDTO.class);
-        log.info("############ CONVERTED RES RETURN ############");
+        log.info("############ ResAll to Body CONVERTED RES RETURN ############");
         LogUtil.responseLogging(gptResDTO);
         return gptResDTO;
     }

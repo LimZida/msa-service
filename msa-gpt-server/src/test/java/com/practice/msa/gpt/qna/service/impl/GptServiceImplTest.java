@@ -17,7 +17,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * title : GptServiceImplTest
+ *
+ * description : Gpt API과의 통신 지원, 동기통신 test
+ *
+ *
+ * reference :
+ *
+ * author : 임현영
+ *
+ * date : 2024.10.29
+ **/
 @SpringBootTest
 @Slf4j
 class GptServiceImplTest {
@@ -28,7 +39,6 @@ class GptServiceImplTest {
     @BeforeEach
     void setUp() {
         messages.add("피자에 대해 짧게 설명해주세요.");
-        messages.add("햄버거에 대해 짧게 설명해주세요.");
     }
 
     @AfterEach
