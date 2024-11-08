@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 /**
@@ -26,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
  * date : 2024.10.29
  **/
 @RestController
-@RequestMapping("/gpt")
+@RequestMapping("/api/v1/gpt")
 @RequiredArgsConstructor
-public class GptController extends AbstractBaseController {
+public class GptController {
     private final GptService gptService;
 
     @PostMapping("/question")
-    public ResponseEntity<ResponseVO> QnA(QuestionDTO questionDTO){
+    public ResponseEntity<ResponseVO> QnA(@RequestBody QuestionDTO questionDTO){
         AnswerDTO answerDTO = gptService.QnA(questionDTO);
 
         LogUtil.responseLogging(answerDTO);

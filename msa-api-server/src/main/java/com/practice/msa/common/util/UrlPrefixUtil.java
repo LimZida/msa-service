@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
  * author : 임현영
  * date : 2024.08.26
  **/
-public abstract class PrefixUtil {
+public abstract class UrlPrefixUtil {
     @Value("${data.api.drug.import.performance.prefix}")
     protected String DRUG_IMPORT;
     @Value("${data.api.drug.export.performance.prefix}")
