@@ -61,6 +61,7 @@ class DrugServiceImplTest {
     @Test
     void exportDrug() {
         Mono<ExportResDTO> exportResDTOMono = drugService.exportDrug(exportDTO);
+        exportResDTOMono.subscribe();
         LogUtil.responseLogging(exportResDTOMono);
     }
 

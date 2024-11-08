@@ -50,7 +50,6 @@ public class ApiUtil {
         log.info("############ Async ResAll API GET REQUEST with Query Params ############");
         apiReqDto.setServiceKey(apiConfig.getApiKeyDecoding());
 
-
         return webClient.get()
                 .uri(uriBuilder -> {
                     // prefix 설정
@@ -103,42 +102,6 @@ public class ApiUtil {
     }
 
     /*
-    * header + body 응답 받을 경우 - 비동기 GET
-    * */
-    public <T extends ApiReqDTO, R> Mono<R> sendGetMessageAndResAllByAsync2(T apiReqDto, Class<R> apiResDtoClass, String prefix) {
-        log.info("############ Async ResAll API GET REQUEST with Query Params ############");
-//        apiReqDto.setServiceKey(apiConfig.getApiKey());
-        apiReqDto.setServiceKey(apiConfig.getApiKeyDecoding());
-
-
-        return webClient.get()
-                .uri(uriBuilder -> {
-                    // prefix 설정
-                    // ex) https://example.com/${prefix}
-                    uriBuilder.path(prefix);
-                    // apiReqDto의 필드를 쿼리 파라미터로 추가
-                    Map<String, String> queryParams = ConvertMapper.convertDtoToMap(apiReqDto);
-                    queryParams.forEach(uriBuilder::queryParam);
-
-                    LogUtil.requestLogging(queryParams);
-                    log.info("Full GET Request URL: {}", uriBuilder.build());
-                    return uriBuilder.build();
-                })
-                .retrieve()
-                .bodyToMono(ObjectNode.class)
-                                .doOnNext(res -> log.info("##### Async BODY VALUE : {}", res))
-                                .flatMap(res -> {
-                                    // "body" 필드 추출
-                                    JsonNode bodyNode = res.path("body");
-                                    // String의 응답값을 DTO로 변환
-                                    R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
-                                    // String의 응답값을 DTO로 변환
-                                    log.info("############ Async ResAll to Body CONVERTED RES RETURN ############");
-                                    return Mono.just(apiResDTO);
-                                });
-    }
-
-    /*
     * header + body 응답 받을 경우 - 비동기 POST
     * */
     public <T extends ApiReqDTO, R> Mono<R> sendPostMessageAndResAllByAsync(T apiReqDto, Class<R> apiResDtoClass, String prefix) {
@@ -166,7 +129,6 @@ public class ApiUtil {
                                     JsonNode bodyNode = res.path("body");
                                     // String의 응답값을 DTO로 변환
                                     R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
-                                    // String의 응답값을 Dto로 반환
                                     log.info("############ Async ResAll to Body CONVERTED RES RETURN ############");
                                     return Mono.just(apiResDTO);
                                 });
@@ -209,10 +171,10 @@ public class ApiUtil {
         log.info("############  API REQUEST ############");
         LogUtil.requestLogging(apiReqDto);
 
-        String json = webClient.post()
+        ObjectNode json = webClient.post()
                 .bodyValue(apiReqDto)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(ObjectNode.class)
                 // 재시도 전 오류 로깅
                 .doOnError(e -> log.error("Error occurred before retry: {}", e.toString()))
                 /*
@@ -240,13 +202,14 @@ public class ApiUtil {
                 // 정상 응답
                 .doOnNext(res ->{
                     log.info("############  API RETURN ############");
-                    log.info(res);
+                    log.info(res.toString());
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
-
+        // "body" 필드 추출
+        JsonNode bodyNode = json.path("body");
         // String의 응답값을 Dto로 반환
-        R apiResDTO = ConvertMapper.convertStringToDTO(json, apiResDtoClass);
+        R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
         log.info("############ CONVERTED RES RETURN ############");
         LogUtil.responseLogging(apiResDTO);
         return apiResDTO;
@@ -259,7 +222,7 @@ public class ApiUtil {
         log.info("############ ResAll  API REQUEST ############");
         LogUtil.requestLogging(apiReqDto);
 
-        String json = webClient.post()
+        ObjectNode json = webClient.post()
                 .bodyValue(apiReqDto)
                 // Mono 방식으로 변환
                 .exchangeToMono(response -> {
@@ -269,7 +232,7 @@ public class ApiUtil {
                     // 상태 코드가 200일 경우
                     if (response.statusCode().is2xxSuccessful()) {
                         // 응답 본문을 String으로 변환
-                        return response.bodyToMono(String.class)
+                        return response.bodyToMono(ObjectNode.class)
                                 // 정상 응답 처리
                                 .doOnNext(res -> log.info("##### BODY VALUE : {}", res));
                     }
@@ -304,37 +267,17 @@ public class ApiUtil {
                 // 예외처리
                 // Mono.error로 응답해야 Retry 가능
                 .onErrorResume(Exception.class, e -> {
-//                    // WebClientRequestException 내 세부 예외 확인
-//                    if (e instanceof WebClientRequestException) {
-//                        // 요청 연결 예외
-//                        if (e.getCause() instanceof ConnectTimeoutException) {
-//                            log.error("ResAll API Connect Timeout Error ::::: {}", e.toString());
-//                            return Mono.error(new CustomRequestException(API02.name(), API02.getMessage(), e));
-//                        }
-//                        // 응답 시간 예외
-//                        else if (e.getCause() instanceof ReadTimeoutException) {
-//                            log.error("ResAll API Read Timeout Error ::::: {}", e.toString());
-//                            return Mono.error(new CustomRequestException(API03.name(), API03.getMessage(), e));
-//                        } else {
-//                            log.error("ResAll API Request Unexpected Error ::::: {}", e.toString());
-//                            return Mono.error(new CustomRequestException(API98.name(), API98.getMessage(), e));
-//                        }
-//                    }
-//                    // 응답 예외
-//                    else if (e instanceof WebClientResponseException) {
-//                        log.error("ResAll API Response Error ::::: {}", e.toString());
-//                        log.error("ResAll to Body: {}", ((WebClientResponseException) e).getResponseBodyAsString());
-//                        return Mono.error(new CustomRequestException(API01.name(), API01.getMessage(), e));
-//                    } else {
                         // 그 외 예외
                         log.error("ResAll API Unexpected Error ::::: {}", e.getMessage());
                         return Mono.error(new CustomRequestException(API99.name(), API99.getMessage(), e));
-//                    }
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
+
+        // "body" 필드 추출
+        JsonNode bodyNode = json.path("body");
         // String의 응답값을 Dto로 반환
-        R apiResDTO = ConvertMapper.convertStringToDTO(json, apiResDtoClass);
+        R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
         log.info("############ ResAll to Body CONVERTED RES RETURN ############");
         return apiResDTO;
     }

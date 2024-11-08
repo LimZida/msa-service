@@ -37,7 +37,7 @@ public class WebClientConfig {
         final WebClient webClient = WebClient.builder()
                 .baseUrl(apiConfig.getApiUrl())
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
-//                .defaultHeader("Authorization", "Bearer " + apiConfig.getApiKey())
+                .defaultHeader("Authorization", "Bearer " + apiConfig.getApiKey())
                 .defaultHeader("Content-Type", "application/json")
                 .build();
 
