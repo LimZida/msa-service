@@ -82,32 +82,9 @@ public class GptApiUtil {
                         throwable instanceof WebClientException))
                 // 예외처리
                 .onErrorResume(Exception.class, e -> {
-                    // WebClientRequestException 내 세부 예외 확인
-                    if (e instanceof WebClientRequestException) {
-                        // 요청 연결 예외
-                        if (e.getCause() instanceof ConnectTimeoutException) {
-                            log.error("API Connect Timeout Error ::::: {}", e.toString());
-                            return Mono.error(new CustomRequestException(GPT02.name(), GPT02.getMessage(), e));
-                        }
-                        // 응답 시간 예외
-                        else if (e.getCause() instanceof ReadTimeoutException) {
-                            log.error("API Read Timeout Error ::::: {}", e.toString());
-                            return Mono.error(new CustomRequestException(GPT03.name(), GPT03.getMessage(), e));
-                        } else {
-                            log.error("API Request Unexpected Error ::::: {}", e.toString());
-                            return Mono.error(new CustomRequestException(GPT98.name(), GPT98.getMessage(), e));
-                        }
-                    }
-                    // 응답 예외
-                    else if (e instanceof WebClientResponseException) {
-                        log.error("API Response Error ::::: {}", e.toString());
-                        log.error("Body: {}", ((WebClientResponseException) e).getResponseBodyAsString());
-                        return Mono.error(new CustomRequestException(GPT01.name(), GPT01.getMessage(), e));
-                    } else {
-                        // 그 외 예외
-                        log.error("API Unexpected Error ::::: {}", e.getMessage());
-                        return Mono.error(new CustomRequestException(GPT99.name(), GPT99.getMessage(), e));
-                    }
+                    // 그 외 예외
+                    log.error("API Unexpected Error ::::: {}", e.getMessage());
+                    return Mono.error(new CustomRequestException(GPT99.name(), GPT99.getMessage(), e));
                 })
                 // 정상 응답
                 .doOnNext(res ->{
@@ -174,32 +151,9 @@ public class GptApiUtil {
                 // 예외처리
                 // Mono.error로 응답해야 Retry 가능
                 .onErrorResume(Exception.class, e -> {
-                    // WebClientRequestException 내 세부 예외 확인
-                    if (e instanceof WebClientRequestException) {
-                        // 요청 연결 예외
-                        if (e.getCause() instanceof ConnectTimeoutException) {
-                            log.error("ResAll API Connect Timeout Error ::::: {}", e.toString());
-                            return Mono.error(new CustomRequestException(GPT02.name(), GPT02.getMessage(), e));
-                        }
-                        // 응답 시간 예외
-                        else if (e.getCause() instanceof ReadTimeoutException) {
-                            log.error("ResAll API Read Timeout Error ::::: {}", e.toString());
-                            return Mono.error(new CustomRequestException(GPT03.name(), GPT03.getMessage(), e));
-                        } else {
-                            log.error("ResAll API Request Unexpected Error ::::: {}", e.toString());
-                            return Mono.error(new CustomRequestException(GPT98.name(), GPT98.getMessage(), e));
-                        }
-                    }
-                    // 응답 예외
-                    else if (e instanceof WebClientResponseException) {
-                        log.error("ResAll API Response Error ::::: {}", e.toString());
-                        log.error("ResAll to Body: {}", ((WebClientResponseException) e).getResponseBodyAsString());
-                        return Mono.error(new CustomRequestException(GPT01.name(), GPT01.getMessage(), e));
-                    } else {
-                        // 그 외 예외
-                        log.error("ResAll API Unexpected Error ::::: {}", e.getMessage());
-                        return Mono.error(new CustomRequestException(GPT99.name(), GPT99.getMessage(), e));
-                    }
+                    // 그 외 예외
+                    log.error("ResAll API Unexpected Error ::::: {}", e.getMessage());
+                    return Mono.error(new CustomRequestException(GPT99.name(), GPT99.getMessage(), e));
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
