@@ -15,6 +15,7 @@ import reactor.util.retry.Retry;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.practice.msa.common.enums.ErrorEnum.*;
 
@@ -49,9 +50,13 @@ public class ApiUtil {
     public <T extends ApiReqDTO, R> Mono<R> sendGetMessageAndResAllByAsync(T apiReqDto, Class<R> apiResDtoClass, String prefix) {
         log.info("############ Async ResAll API GET REQUEST with Query Params ############");
         apiReqDto.setServiceKey(apiConfig.getApiKeyDecoding());
+        AtomicLong t1 = new AtomicLong();
+        AtomicLong t2 = new AtomicLong();
 
         return webClient.get()
                 .uri(uriBuilder -> {
+                    t1.set(System.currentTimeMillis());
+
                     // prefix 설정
                     // ex) https://example.com/${prefix}
                     uriBuilder.path(prefix);
@@ -64,18 +69,24 @@ public class ApiUtil {
                     return uriBuilder.build();
                 })
                 .exchangeToMono(response -> {
+                    t2.set(System.currentTimeMillis());
+
+                    log.info("API TIME : {}ms", t2.get() -t1.get());
+
                     log.info("############ Async API RESPONSE ############");
                     log.info("##### Async API STATUS CODE : {}", response.statusCode());
 
                     // 상태 코드가 200일 경우
                     if (response.statusCode().is2xxSuccessful()) {
                         return response.bodyToMono(ObjectNode.class)
-                                .doOnNext(res -> log.info("##### Async VALUE : {}", res))
+                                .doOnNext(res ->
+                                        log.info("##### Async VALUE : {}", res)
+                                )
                                 .flatMap(res -> {
                                     // "body" 필드 추출
-                                    JsonNode bodyNode = res.path("body");
+                                    final JsonNode bodyNode = res.path("body");
                                     // String의 응답값을 DTO로 변환
-                                    R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
+                                    final R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
                                     LogUtil.responseLogging(apiResDTO);
                                     log.info("############ Async ResAll to Body CONVERTED RES RETURN ############");
                                     return Mono.just(apiResDTO);
@@ -126,9 +137,9 @@ public class ApiUtil {
                                 .doOnNext(res -> log.info("##### Async BODY VALUE : {}", res))
                                 .flatMap(res -> {
                                     // "body" 필드 추출
-                                    JsonNode bodyNode = res.path("body");
+                                    final JsonNode bodyNode = res.path("body");
                                     // String의 응답값을 DTO로 변환
-                                    R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
+                                    final R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
                                     log.info("############ Async ResAll to Body CONVERTED RES RETURN ############");
                                     return Mono.just(apiResDTO);
                                 });
@@ -207,9 +218,9 @@ public class ApiUtil {
                 // 동기적 (블로킹) 응답 대기
                 .block();
         // "body" 필드 추출
-        JsonNode bodyNode = json.path("body");
+        final JsonNode bodyNode = json.path("body");
         // String의 응답값을 Dto로 반환
-        R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
+        final R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
         log.info("############ CONVERTED RES RETURN ############");
         LogUtil.responseLogging(apiResDTO);
         return apiResDTO;
@@ -275,9 +286,9 @@ public class ApiUtil {
                 .block();
 
         // "body" 필드 추출
-        JsonNode bodyNode = json.path("body");
+        final JsonNode bodyNode = json.path("body");
         // String의 응답값을 Dto로 반환
-        R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
+        final R apiResDTO = ConvertMapper.convertStringToDTO(bodyNode.toString(), apiResDtoClass);
         log.info("############ ResAll to Body CONVERTED RES RETURN ############");
         return apiResDTO;
     }
