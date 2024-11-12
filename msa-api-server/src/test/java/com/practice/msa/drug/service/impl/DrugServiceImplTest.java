@@ -14,6 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 /**
  * title : DrugServiceImplTest
@@ -60,6 +65,32 @@ class DrugServiceImplTest {
 
     @Test
     void exportDrug() {
+        List<ExportDTO> people = Arrays.asList(
+                new ExportDTO("2024"),
+                new ExportDTO("2024"),
+                new ExportDTO("2024"),
+                new ExportDTO("2024"),
+                new ExportDTO("2024")
+        );
+
+        List<String> collect = people.stream()
+                .map(val -> val.getTrmtYr())
+                .collect(Collectors.toList());
+
+        List<String[]> collect2 = people.stream()
+                .map(val -> val.getTrmtYr().split(""))
+                .collect(Collectors.toList());
+
+        Set<String> collect3 = people.stream()
+                .map(val -> val.getTrmtYr().split(""))
+                .flatMap(Arrays::stream)
+                .collect(Collectors.toSet());
+
+        LogUtil.responseLogging(collect);
+        LogUtil.responseLogging(collect2);
+        LogUtil.responseLogging(collect3);
+
+
         Mono<ExportResDTO> exportResDTOMono = drugService.exportDrug(exportDTO);
         exportResDTOMono.subscribe();
         LogUtil.responseLogging(exportResDTOMono);

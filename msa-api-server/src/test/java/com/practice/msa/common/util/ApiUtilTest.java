@@ -134,6 +134,7 @@ class ApiUtilTest {
 
     @Test
     void sendGetMessageAndResAllByAsync() {
+
         /*
         * 200 응답 설정 - given
         * */
