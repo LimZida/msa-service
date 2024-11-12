@@ -18,7 +18,7 @@ public class DrugServiceImpl extends UrlPrefixUtil implements DrugService {
 
     @Override
     public Mono<ExportResDTO> exportDrug(ExportDTO exportDTO) {
-        ApiReqDTO apiReqDTO = ConvertMapper.to(exportDTO, ApiReqDTO.class);
+        final ApiReqDTO apiReqDTO = ConvertMapper.to(exportDTO, ApiReqDTO.class);
 
         for(int i = 0; i<5; ++i){
             apiUtil.sendGetMessageAndResAllByAsync(apiReqDTO, ExportResDTO.class, DRUG_EXPORT).subscribe();
@@ -29,7 +29,7 @@ public class DrugServiceImpl extends UrlPrefixUtil implements DrugService {
 
     @Override
     public Mono<ImportResDTO> importDrug(ImportDTO importDTO) {
-        ApiReqDTO apiReqDTO = ConvertMapper.to(importDTO, ApiReqDTO.class);
+        final ApiReqDTO apiReqDTO = ConvertMapper.to(importDTO, ApiReqDTO.class);
 
         for(int i = 0; i<5; ++i){
             apiUtil.sendGetMessageAndResAllByAsync(apiReqDTO, ImportResDTO.class, DRUG_IMPORT).subscribe();

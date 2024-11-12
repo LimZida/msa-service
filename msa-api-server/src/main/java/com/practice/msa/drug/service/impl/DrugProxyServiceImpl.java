@@ -8,7 +8,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
+/**
+ * title : DrugProxyServiceImpl
+ *
+ * description : proxy 요청값 검증
+ *
+ * reference :
+ *
+ * author : 임현영
+ * date : 2024.11.12
+ **/
 @Service
 @Primary
 @RequiredArgsConstructor

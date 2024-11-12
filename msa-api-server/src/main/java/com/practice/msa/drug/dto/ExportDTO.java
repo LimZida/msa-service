@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.practice.msa.common.exception.custom.CustomRequestException;
 import com.practice.msa.common.util.AbstractDTO;
 import com.practice.msa.common.util.CommonRequestDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,6 +33,7 @@ import static com.practice.msa.common.enums.ErrorEnum.LGC04;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ExportDTO extends CommonRequestDTO {
     // 취급년도
     @JsonProperty("TRMT_YR")
