@@ -16,6 +16,8 @@ import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicLong;
+
 import static com.practice.msa.common.enums.ErrorEnum.*;
 
 /**
@@ -54,11 +56,11 @@ public class GptApiUtil {
     /*
     *  body 응답만 받을 경우
     * */
-    public GptResDTO sendMessageAndResBody(GptReqDTO gptReqDTO){
+    public <T,R> R sendMessageAndResBody(Class<R> gptResDTOClass , T gptReqDTO){
         log.info("############ GPT API REQUEST ############");
         LogUtil.requestLogging(gptReqDTO);
 
-        String json = webClient.post()
+        final String json = webClient.post()
                 .bodyValue(gptReqDTO)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -93,7 +95,8 @@ public class GptApiUtil {
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
-        GptResDTO gptResDTO = ConvertMapper.convertStringToDTO(json,GptResDTO.class);
+
+        final R gptResDTO = ConvertMapper.convertStringToDTO(json,gptResDTOClass);
         log.info("############ CONVERTED RES RETURN ############");
         LogUtil.responseLogging(gptResDTO);
         return gptResDTO;
@@ -102,14 +105,22 @@ public class GptApiUtil {
     /*
     * header + body 응답 받을 경우
     * */
-    public GptResDTO sendMessageAndResAll(GptReqDTO gptReqDTO) {
+    public <T,R> R sendMessageAndResAll(Class<R> gptResDTOClass , T gptReqDTO) {
         log.info("############ ResAll GPT API REQUEST ############");
-        LogUtil.requestLogging(gptReqDTO);
+        LogUtil.requestLogging(gptReqDTO)
+        ;
+        AtomicLong t1 = new AtomicLong();
+        AtomicLong t2 = new AtomicLong();
 
-        String json = webClient.post()
+        t1.set(System.currentTimeMillis());
+
+        final String json = webClient.post()
                 .bodyValue(gptReqDTO)
                 // Mono 방식으로 변환
                 .exchangeToMono(response -> {
+                    t2.set(System.currentTimeMillis());
+                    log.info("API TIME : {}ms", t2.get() -t1.get());
+
                     log.info("############ GPT API RESPONSE ############");
                     log.info("##### API STATUS CODE : {}",response.statusCode());
 
@@ -157,7 +168,8 @@ public class GptApiUtil {
                 })
                 // 동기적 (블로킹) 응답 대기
                 .block();
-        GptResDTO gptResDTO = ConvertMapper.convertStringToDTO(json,GptResDTO.class);
+
+        final R gptResDTO = ConvertMapper.convertStringToDTO(json,gptResDTOClass);
         log.info("############ ResAll to Body CONVERTED RES RETURN ############");
         LogUtil.responseLogging(gptResDTO);
         return gptResDTO;

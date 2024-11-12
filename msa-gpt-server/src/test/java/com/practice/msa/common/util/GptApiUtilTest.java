@@ -139,7 +139,7 @@ class GptApiUtilTest {
         /*
         * GPT API 요청 - when
         * */
-        final GptResDTO actualResponse = gptApiUtil.sendMessageAndResAll(request);
+        final GptResDTO actualResponse = gptApiUtil.sendMessageAndResAll(GptResDTO.class , request);
         log.info("actual: {}",actualResponse.getChoices().get(0).getMessage().getContent());
         log.info("mock: {}",response.getChoices().get(0).getMessage().getContent());
 
@@ -167,7 +167,7 @@ class GptApiUtilTest {
         * 에러 예상 - when then
         * */
         assertThrows(CustomRequestException.class, () -> {
-            gptApiUtil.sendMessageAndResAll(request);
+            gptApiUtil.sendMessageAndResAll(GptResDTO.class , request);
         });
     }
 }
