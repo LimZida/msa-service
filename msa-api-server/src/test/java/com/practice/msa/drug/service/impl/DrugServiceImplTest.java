@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * title : DrugServiceImplTest
  *
  * description : Drug API과의 통신 지원, 동기통신 test
+ *               비동기 통신 시 test코드의 경우 main이 끝나버리면 전부 끝내버리기 때문에 값을 보지 못하지 끝난다.
  *
  *
  * reference :
@@ -64,36 +66,41 @@ class DrugServiceImplTest {
     }
 
     @Test
-    void exportDrug() {
-        List<ExportDTO> people = Arrays.asList(
-                new ExportDTO("2024"),
-                new ExportDTO("2024"),
-                new ExportDTO("2024"),
-                new ExportDTO("2024"),
-                new ExportDTO("2024")
-        );
+    void exportDrug() throws InterruptedException {
+//        List<ExportDTO> people = Arrays.asList(
+//                new ExportDTO("2024"),
+//                new ExportDTO("2024"),
+//                new ExportDTO("2024"),
+//                new ExportDTO("2024"),
+//                new ExportDTO("2024")
+//        );
+//
+//        List<String> collect = people.stream()
+//                .map(val -> val.getTrmtYr())
+//                .collect(Collectors.toList());
+//
+//        List<String[]> collect2 = people.stream()
+//                .map(val -> val.getTrmtYr().split(""))
+//                .collect(Collectors.toList());
+//
+//        Set<String> collect3 = people.stream()
+//                .map(val -> val.getTrmtYr().split(""))
+//                .flatMap(Arrays::stream)
+//                .collect(Collectors.toSet());
+//
+//        LogUtil.responseLogging(collect);
+//        LogUtil.responseLogging(collect2);
+//        LogUtil.responseLogging(collect3);
 
-        List<String> collect = people.stream()
-                .map(val -> val.getTrmtYr())
-                .collect(Collectors.toList());
-
-        List<String[]> collect2 = people.stream()
-                .map(val -> val.getTrmtYr().split(""))
-                .collect(Collectors.toList());
-
-        Set<String> collect3 = people.stream()
-                .map(val -> val.getTrmtYr().split(""))
-                .flatMap(Arrays::stream)
-                .collect(Collectors.toSet());
-
-        LogUtil.responseLogging(collect);
-        LogUtil.responseLogging(collect2);
-        LogUtil.responseLogging(collect3);
-
-
+        // 비동기로 실행하였기에 이러한 상황이 발생한건데 test코드의 경우 main이 끝나버리면 전부 끝내버리기 때문에 값을 보지 못한 것입니다.
+        // 이를 위해 코드를 아래와 같이 변경하고 다시 실행해 두 값이 나오게 됩니다.
+        CountDownLatch latch = new CountDownLatch(1);
         Mono<ExportResDTO> exportResDTOMono = drugService.exportDrug(exportDTO);
-        exportResDTOMono.subscribe();
-        LogUtil.responseLogging(exportResDTOMono);
+        exportResDTOMono.subscribe(val -> {
+            LogUtil.responseLogging(val);
+            latch.countDown();
+        });
+        latch.await();
     }
 
     @Test
