@@ -1,6 +1,5 @@
 package com.practice.msa.drug.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -11,10 +10,9 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * title : AnswerDTO
+ * title : ExportResDTO
  *
- * description : 서버 -> 사용자로 보내는 요청값
- *               질문 내용을 응답
+ * description : 마약 수출에 대한 사용자 응답값
  *
  *
  * reference :

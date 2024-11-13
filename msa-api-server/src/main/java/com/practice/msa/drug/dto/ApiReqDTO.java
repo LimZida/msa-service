@@ -14,10 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * title : GptReqDTO
+ * title : ApiReqDTO
  *
- * description : GPT에게 보내는 요청값
- *    예시)
+ * description : 공공데이터 포탈로 보내는 요청값
  *
  *
  *

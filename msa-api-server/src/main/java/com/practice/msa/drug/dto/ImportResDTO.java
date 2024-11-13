@@ -10,10 +10,9 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * title : AnswerDTO
+ * title : ImportResDTO
  *
- * description : 서버 -> 사용자로 보내는 요청값
- *               질문 내용을 응답
+ * description : 마약 수입 현황에 대한 응답값
  *
  *
  * reference :

@@ -18,10 +18,10 @@ import static com.practice.msa.common.enums.ErrorEnum.LGC01;
 import static com.practice.msa.common.enums.ErrorEnum.LGC04;
 
 /**
- * title : QnaDTO
+ * title : ExportDTO
  *
- * description : 사용자 -> 서버로 보내는 요청값
- *               질문 내용을 요청
+ * description : 마약 수출내용에 대한 요청값
+ *
  *
  *
  * reference :

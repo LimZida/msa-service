@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
 /**
  * title : DrugProxyServiceImpl
  *
@@ -26,23 +27,42 @@ public class DrugProxyServiceImpl implements DrugService {
     private final DrugServiceImpl drugService;
 
     @Override
+    public AllResDTO allDrug(AllDTO allDTO){
+        // 요청값 로깅
+        LogUtil.requestLogging(allDTO);
+        // 요청값 검증
+        allDTO.validate();
+
+        return drugService.allDrug(allDTO);
+    }
+
+    @Override
     public Mono<ExportResDTO> exportDrug(ExportDTO exportDTO) {
+        // 요청값 로깅
         LogUtil.requestLogging(exportDTO);
+        // 요청값 검증
         exportDTO.validate();
+
         return drugService.exportDrug(exportDTO);
     }
 
     @Override
     public Mono<ImportResDTO> importDrug(ImportDTO importDTO) {
+        // 요청값 로깅
         LogUtil.requestLogging(importDTO);
+        // 요청값 검증
         importDTO.validate();
+
         return drugService.importDrug(importDTO);
     }
 
     @Override
     public Mono<MfrResDTO> manufacturingDrug(MfrDTO mfrDTO) {
+        // 요청값 로깅
         LogUtil.requestLogging(mfrDTO);
+        // 요청값 검증
         mfrDTO.validate();
+
         return drugService.manufacturingDrug(mfrDTO);
     }
 }
