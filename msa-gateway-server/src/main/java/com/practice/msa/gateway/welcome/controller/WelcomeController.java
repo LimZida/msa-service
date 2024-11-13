@@ -1,6 +1,5 @@
-package com.practice.msa.welcome.controller;
+package com.practice.msa.gateway.welcome.controller;
 
-import com.practice.msa.welcome.service.WelcomeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/gpt")
+@RequestMapping("/gateway")
 @AllArgsConstructor
 public class WelcomeController{
-    private final WelcomeService welcomeService;
 
     @GetMapping("")
     public String welcome(){
-        welcomeService.welcome();
-
         return "welcome Page";
     }
 }

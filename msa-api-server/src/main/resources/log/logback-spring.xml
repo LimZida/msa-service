@@ -12,10 +12,10 @@
 
 
     <!-- 로그 파일이 저장될 경로 -->
-    <property name="LOG_PATH" value="C:/workspace/SMART_HOME/logs"/>
+    <property name="LOG_PATH" value="/logs/gateway"/>
 
     <!-- 로그 파일 이름 -->
-    <property name="LOG_FILE_NAME" value="gpt_log"/>
+    <property name="LOG_FILE_NAME" value="gateway_log"/>
 
 
     <!-- 로그 레벨 -->

@@ -1,6 +1,5 @@
 package com.practice.msa.gpt.controller;
 
-import com.practice.msa.common.controller.AbstractBaseController;
 import com.practice.msa.common.util.LogUtil;
 import com.practice.msa.common.util.ResponseVO;
 import com.practice.msa.gpt.dto.AnswerDTO;
