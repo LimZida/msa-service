@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 /**
  * title : DrugController
  *
@@ -36,20 +38,19 @@ public class DrugController{
 
     // 식품의약품안전처_의료용 마약류 연간 수출/수입/제조 실적 서비스 전부 조회
     @GetMapping("/all")
-    public ResponseEntity<ResponseVO> allDrug(ExportDTO exportDTO){
+    public ResponseEntity<ResponseVO> allDrug(AllDTO allDTO){
 
+        AllResDTO allInfo = drugService.allDrug(allDTO);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
-                        new ResponseVO(HttpStatus.OK.value(), "")
+                        new ResponseVO(HttpStatus.OK.value(), allInfo)
                 );
     }
 
     // 식품의약품안전처_의료용 마약류 연간 수출실적 서비스
     @GetMapping("/export")
     public Mono<ResponseEntity<ResponseVO>> exportDrug(ExportDTO exportDTO){
-//        Mono<ExportResDTO> exportResDTOMono = drugService.exportDrug(exportDTO);
-
         return drugService.exportDrug(exportDTO)
             .map(data ->
                     ResponseEntity.status(HttpStatus.OK)

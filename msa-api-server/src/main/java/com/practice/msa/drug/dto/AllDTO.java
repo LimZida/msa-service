@@ -1,10 +1,7 @@
 package com.practice.msa.drug.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.practice.msa.common.exception.custom.CustomRequestException;
-import com.practice.msa.common.util.AbstractDTO;
 import com.practice.msa.common.util.CommonRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,16 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.List;
-
 import static com.practice.msa.common.enums.ErrorEnum.LGC01;
 import static com.practice.msa.common.enums.ErrorEnum.LGC04;
 
 /**
- * title : QnaDTO
+ * title : AllDTO
  *
- * description : 사용자 -> 서버로 보내는 요청값
- *               질문 내용을 요청
+ * description : 마약 제조, 수입, 수출 전부를 조회하기 위한 요청값
+ *
  *
  *
  * reference :
@@ -34,7 +29,7 @@ import static com.practice.msa.common.enums.ErrorEnum.LGC04;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExportDTO extends CommonRequestDTO {
+public class AllDTO extends CommonRequestDTO {
     // 취급년도
     @JsonProperty("TRMT_YR")
     private String trmtYr;

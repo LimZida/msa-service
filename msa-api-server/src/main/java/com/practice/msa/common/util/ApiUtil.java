@@ -50,6 +50,7 @@ public class ApiUtil {
     public <T extends ApiReqDTO, R> Mono<R> sendGetMessageAndResAllByAsync(T apiReqDto, Class<R> apiResDtoClass, String prefix) {
         log.info("############ Async ResAll API GET REQUEST with Query Params ############");
         apiReqDto.setServiceKey(apiConfig.getApiKeyDecoding());
+//        apiReqDto.setServiceKey(apiConfig.getApiKey());
         AtomicLong t1 = new AtomicLong();
         AtomicLong t2 = new AtomicLong();
 
