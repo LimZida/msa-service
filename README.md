@@ -2,7 +2,7 @@
 msa 통신 기반 서비스
 
 msa-gpt-server 
-MSA - CHAT GPT 연동 서버 (동기 통신)
+MSA - LLM 연동 서버 (동기 통신, CHAT GPT + RAG)
 
 msa-api-server 
 MSA - 공공 API 연동 서버 (비동기 통신)
