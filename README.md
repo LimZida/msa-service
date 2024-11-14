@@ -1,6 +1,9 @@
 # msa-service
 msa 통신 기반 서비스
 
+chromadb-server
+문서 RAG 구현 서버 (rest api - gpt와 연동)
+
 msa-gpt-server 
 MSA - LLM 연동 서버 (동기 통신, CHAT GPT + RAG)
 
