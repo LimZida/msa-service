@@ -40,6 +40,8 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * reference : https://055055.tistory.com/118 , https://jie0025.tistory.com/545 , https://www.devkuma.com/docs/mock-web-server/
  *
+ *             비동기 통신 테스트 시 실수 : https://yang1s.tistory.com/12
+ *
  * author : 임현영
  *
  * date : 2024.11.07
