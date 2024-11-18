@@ -3,10 +3,10 @@
 
 <mapper namespace="com.practice.msa.gpt.repository.GptRepository">
     <insert id="insertGptLog" parameterType="java.util.List">
-        INSERT INTO GPT_LOG (req_date, role, content, object, model)
+        INSERT INTO GPT_LOG (req_date, role, content, object, model,prompt)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (now(),#{item.object},#{item.content},#{item.object}, #{item.model})
+            (now(),#{item.object},#{item.content},#{item.object}, #{item.model},#{item.prompt})
         </foreach>
     </insert>
 </mapper>

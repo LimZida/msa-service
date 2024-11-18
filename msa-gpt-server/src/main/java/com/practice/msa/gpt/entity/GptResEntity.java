@@ -8,4 +8,5 @@ public class GptResEntity {
     private final String object;
     private final String model;
     private final String content;
+    private final String prompt;
 }
