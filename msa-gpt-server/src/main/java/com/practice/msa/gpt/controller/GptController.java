@@ -2,16 +2,15 @@ package com.practice.msa.gpt.controller;
 
 import com.practice.msa.common.util.LogUtil;
 import com.practice.msa.common.util.ResponseVO;
-import com.practice.msa.gpt.dto.AnswerDTO;
-import com.practice.msa.gpt.dto.QuestionDTO;
+import com.practice.msa.gpt.dto.*;
 import com.practice.msa.gpt.service.GptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 /**
  * title : GptController
  *
@@ -40,6 +39,18 @@ public class GptController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
                         new ResponseVO(HttpStatus.OK.value(), answerDTO)
+                );
+    }
+
+    @GetMapping("/question")
+    public ResponseEntity<ResponseVO> History(SearchDTO searchDTO){
+        QnaListDTO qndList = gptService.History(searchDTO);
+
+        LogUtil.responseLogging(qndList);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(
+                        new ResponseVO(HttpStatus.OK.value(), qndList)
                 );
     }
 }

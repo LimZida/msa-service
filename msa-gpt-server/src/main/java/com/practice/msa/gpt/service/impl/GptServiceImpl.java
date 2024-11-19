@@ -1,12 +1,12 @@
 package com.practice.msa.gpt.service.impl;
 
 import com.practice.msa.common.config.GptConfig;
+import com.practice.msa.common.util.ConvertMapper;
 import com.practice.msa.common.util.GptApiUtil;
-import com.practice.msa.gpt.dto.AnswerDTO;
-import com.practice.msa.gpt.dto.GptReqDTO;
-import com.practice.msa.gpt.dto.QuestionDTO;
+import com.practice.msa.gpt.dto.*;
 import com.practice.msa.gpt.entity.GptResEntity;
-import com.practice.msa.gpt.dto.GptResDTO;
+import com.practice.msa.gpt.entity.HistoryEntity;
+import com.practice.msa.gpt.entity.SearchEntity;
 import com.practice.msa.gpt.repository.GptRepository;
 import com.practice.msa.gpt.service.GptService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.practice.msa.gpt.dto.GptReqDTO.*;
 
 @Service
 @RequiredArgsConstructor
@@ -57,5 +55,15 @@ public class GptServiceImpl implements GptService {
         gptRepository.insertGptLog(gptEntityList);
 
         return new AnswerDTO(answerList);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public QnaListDTO History(SearchDTO searchDTO) {
+        SearchEntity searchEntity = ConvertMapper.to(searchDTO, SearchEntity.class);
+
+        List<HistoryEntity> historyList = gptRepository.selectGptHistory(searchEntity);
+
+        return new QnaListDTO(ConvertMapper.toList(historyList, HistoryDTO.class));
     }
 }
