@@ -20,6 +20,7 @@ import lombok.*;
 @NoArgsConstructor
 public class SearchEntity {
     private String userId;
+    private int seq;
     private int limit;
     private int offset;
 }

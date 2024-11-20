@@ -24,9 +24,9 @@ import static com.practice.msa.common.enums.ErrorEnum.LGC04;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommonRequestDTO{
-    private String userId;
+    private String userId = "hylim";
     private int offset = 0;
-    private int limit = 100;
+    private int limit = 1000;
 
     // 필요하면 하위단에서 Override 해서 쓰시면 됩니다.
     public void validate() {

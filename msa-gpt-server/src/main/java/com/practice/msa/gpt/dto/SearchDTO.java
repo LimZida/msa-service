@@ -22,5 +22,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SearchDTO extends CommonRequestDTO {
-    private String userId = "hylim";
+    private int seq;
 }

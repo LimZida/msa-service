@@ -24,6 +24,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QnaListDTO {
-    List<HistoryDetailDTO> qnaList;
+public class HistoryListDTO {
+    List<HistoryDTO> historyList;
 }

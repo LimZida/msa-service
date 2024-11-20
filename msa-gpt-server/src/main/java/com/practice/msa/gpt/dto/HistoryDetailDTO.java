@@ -20,8 +20,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HistoryDTO {
-    private int seq;
+public class HistoryDetailDTO {
+//    private int seq;
     private String answer;
     private String question;
     private String date;

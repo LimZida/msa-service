@@ -25,5 +25,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QnaListDTO {
-    List<HistoryDTO> qnaList;
+    List<HistoryDetailDTO> qnaList;
 }
