@@ -1,5 +1,6 @@
 package com.practice.msa.gpt.service.impl;
 
+import com.practice.msa.common.util.CommonRequestDTO;
 import com.practice.msa.common.util.LogUtil;
 import com.practice.msa.gpt.dto.*;
 import com.practice.msa.gpt.service.GptService;
@@ -25,11 +26,20 @@ public class GptProxyServiceImpl implements GptService {
     }
 
     @Override
-    public QnaListDTO History(SearchDTO searchDTO) {
+    public QnaListDTO HistoryDetail(SearchDTO searchDTO) {
         LogUtil.requestLogging(searchDTO);
 
         searchDTO.validate();
 
-        return gptService.History(searchDTO);
+        return gptService.HistoryDetail(searchDTO);
+    }
+
+    @Override
+    public HistoryListDTO History(CommonRequestDTO commonRequestDTO) {
+        LogUtil.requestLogging(commonRequestDTO);
+
+        commonRequestDTO.validate();
+
+        return gptService.History(commonRequestDTO);
     }
 }

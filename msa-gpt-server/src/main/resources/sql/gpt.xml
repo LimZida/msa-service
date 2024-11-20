@@ -14,11 +14,23 @@
         SELECT
             gpt_seq as seq,
             TO_CHAR(req_date,'YYYY-MM-DD HH24:MI:SS') as date,
+            prompt as title
+        FROM
+            GPT_LOG
+        ORDER BY req_date desc
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectGptHistoryDetail" parameterType="SearchEntity" resultType="HistoryDetailEntity">
+        SELECT
+--             gpt_seq as seq,
+            TO_CHAR(req_date,'YYYY-MM-DD HH24:MI:SS') as date,
             content as answer,
             prompt as question
         FROM
             GPT_LOG
-        ORDER BY req_date asc
+        WHERE
+            gpt_seq = #{seq}
         LIMIT #{limit} OFFSET #{offset}
     </select>
 </mapper>

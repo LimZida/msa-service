@@ -1,5 +1,6 @@
 package com.practice.msa.gpt.controller;
 
+import com.practice.msa.common.util.CommonRequestDTO;
 import com.practice.msa.common.util.LogUtil;
 import com.practice.msa.common.util.ResponseVO;
 import com.practice.msa.gpt.dto.*;
@@ -8,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * title : GptController
@@ -42,15 +41,27 @@ public class GptController {
                 );
     }
 
-    @GetMapping("/question")
-    public ResponseEntity<ResponseVO> History(SearchDTO searchDTO){
-        QnaListDTO qndList = gptService.History(searchDTO);
+    @GetMapping("/history")
+    public ResponseEntity<ResponseVO> History(CommonRequestDTO commonRequestDTO){
+        HistoryListDTO historyList = gptService.History(commonRequestDTO);
 
-        LogUtil.responseLogging(qndList);
+        LogUtil.responseLogging(historyList);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
-                        new ResponseVO(HttpStatus.OK.value(), qndList)
+                        new ResponseVO(HttpStatus.OK.value(), historyList)
+                );
+    }
+
+    @GetMapping("/history/detail")
+    public ResponseEntity<ResponseVO> HistoryDetail(SearchDTO searchDTO){
+        QnaListDTO qnaList = gptService.HistoryDetail(searchDTO);
+
+        LogUtil.responseLogging(qnaList);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(
+                        new ResponseVO(HttpStatus.OK.value(), qnaList)
                 );
     }
 }
