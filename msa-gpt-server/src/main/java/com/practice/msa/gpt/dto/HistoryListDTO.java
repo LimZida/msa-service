@@ -1,11 +1,14 @@
 package com.practice.msa.gpt.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
- * title : HistoryDTO
+ * title : QnaListDTO
  *
  * description : 사용자 -> 서버로 보내는 요청값
  *               질문 내용을 요청
@@ -20,9 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HistoryDetailDTO {
-    private int seq;
-    private String answer;
-    private String question;
-    private String date;
+@AllArgsConstructor
+public class QnaListDTO {
+    List<HistoryDetailDTO> qnaList;
 }

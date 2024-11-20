@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PUBLIC)// 기본생성자
-public class HistoryDetailEntity {
+public class HistoryEntity {
 //    private final int seq;
     private final String answer;
     private final String question;
