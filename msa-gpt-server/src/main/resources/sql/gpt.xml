@@ -3,10 +3,10 @@
 
 <mapper namespace="com.practice.msa.gpt.repository.GptRepository">
     <insert id="insertGptLog" parameterType="java.util.List">
-        INSERT INTO GPT_LOG (req_date, role, content, object, model,prompt)
+        INSERT INTO GPT_LOG (req_date, role, content, object, model,prompt,id)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
-            (now(),#{item.object},#{item.content},#{item.object}, #{item.model},#{item.prompt})
+            (now(),#{item.object},#{item.content},#{item.object}, #{item.model},#{item.prompt},#{item.id})
         </foreach>
     </insert>
 
@@ -14,9 +14,11 @@
         SELECT
             gpt_seq as seq,
             TO_CHAR(req_date,'YYYY-MM-DD HH24:MI:SS') as date,
-            prompt as title
+            prompt as title,
+            id as id
         FROM
             GPT_LOG
+        WHERE id is not null
         ORDER BY req_date desc
         LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -30,7 +32,7 @@
         FROM
             GPT_LOG
         WHERE
-            gpt_seq = #{seq}
+            id = #{id}
         LIMIT #{limit} OFFSET #{offset}
     </select>
 </mapper>

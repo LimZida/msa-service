@@ -24,4 +24,5 @@ public class HistoryDTO {
     private int seq;
     private String title;
     private String date;
+    private String id;
 }

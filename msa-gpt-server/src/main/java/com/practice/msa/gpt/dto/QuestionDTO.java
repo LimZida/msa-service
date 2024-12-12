@@ -26,6 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionDTO extends AbstractDTO {
     private List<String> messages;
+    private String id;
 
     @Override
     public void validate() {

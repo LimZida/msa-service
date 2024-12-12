@@ -44,11 +44,12 @@ public class GptServiceImpl implements GptService {
 
 
         // DTO -> Entity 변환
+        final String id = questionDTO.getId();
         final String object = gptResDTO.getObject();
         final String resModel = gptResDTO.getModel();
         final List<GptResEntity> gptEntityList = answerList.stream()
                 .map(content -> {
-                    final GptResEntity gptResEntity = new GptResEntity(object,resModel,content,prompt);
+                    final GptResEntity gptResEntity = new GptResEntity(object,resModel,content,prompt,id);
                     return gptResEntity;
                 })
                 .collect(Collectors.toList());

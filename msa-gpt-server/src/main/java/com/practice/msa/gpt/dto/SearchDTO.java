@@ -1,6 +1,7 @@
 package com.practice.msa.gpt.dto;
 
 import com.practice.msa.common.util.CommonRequestDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class SearchDTO extends CommonRequestDTO {
     private int seq;
+    private String id;
 }
