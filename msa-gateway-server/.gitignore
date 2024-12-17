@@ -24,7 +24,7 @@ hs_err_pid*
 replay_pid*
 
 ### resource ###
-src/main/resources/*.properties
+#src/main/resources/*.properties
 
 # idea & maven
 .idea/*
